@@ -155,6 +155,9 @@ const static wchar_t wt_micgain[]           = L"Mic gain";
 const static wchar_t wt_micgain_3db[]       = L"3db Gain";
 const static wchar_t wt_micgain_6db[]       = L"6db Gain";
 
+const static wchar_t wt_button_autolevel[]   = L"Audio Leveling";
+const static wchar_t wt_autolevel_auto[]     = L"Auto";
+
 const static wchar_t wt_radio_status[]	    = L"Mode Display";
 const static wchar_t wt_radio_stat_off[]    = L"Mode/CC Off";
 const static wchar_t wt_radio_stat_on[]     = L"Mode/CC";
@@ -627,6 +630,44 @@ void create_menu_entry_micgain_screen(void)
         mn_submenu_add(wt_micgain_6db, create_menu_entry_micgain_6db_screen);
 
         mn_submenu_finalize();
+}
+
+//==========================================================================================================//
+// options: Audio Leveling - Auto/Disabled
+//==========================================================================================================//
+void create_menu_entry_autolevel_enable_screen(void)
+{
+	mn_create_single_timed_ack(wt_button_autolevel, wt_autolevel_auto);
+
+	global_addl_config.audio_leveling = 1;
+
+	cfg_save();
+}
+
+void create_menu_entry_autolevel_disable_screen(void)
+{
+	mn_create_single_timed_ack(wt_button_autolevel, wt_disable);
+
+	global_addl_config.audio_leveling = 0;
+
+	cfg_save();
+}
+
+void create_menu_entry_autolevel_screen(void)
+{
+	mn_submenu_init(wt_button_autolevel);
+
+	if (global_addl_config.audio_leveling == 1) {
+		md380_menu_entry_selected = 0;
+	}
+	else {
+		md380_menu_entry_selected = 1;
+	}
+
+	mn_submenu_add(wt_autolevel_auto, create_menu_entry_autolevel_enable_screen);
+	mn_submenu_add(wt_disable, create_menu_entry_autolevel_disable_screen);
+
+	mn_submenu_finalize();
 }
 
 //==========================================================================================================//
@@ -2667,6 +2708,7 @@ void create_menu_entry_radio(void)
    mn_submenu_add_98(wt_backlight_menu, create_menu_entry_backlight_screen);
    mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
    mn_submenu_add_98(wt_micgain, create_menu_entry_micgain_screen);
+   mn_submenu_add_98(wt_button_autolevel, create_menu_entry_autolevel_screen);
    }
                                                         // the FM setup / deviation level settings are very
                                                         // experimental features. They will we added to the

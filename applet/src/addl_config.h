@@ -49,6 +49,7 @@ typedef struct addl_config {
        // as used for the 'alternative' menu and the alternative LCD driver:
        // BLUE component in bits 15..11, GREEN in bits 10..5, RED in bits 4..0 .
     uint8_t mic_gain;		// 0=Disabled, 1=2db dgain, 2=6db gain
+    uint8_t audio_leveling; // automatic receive audio leveling
     uint8_t fm_bpf;		// 0=off, 1=on
     uint8_t fm_comp;		// 0=off, 1=on
     uint8_t fm_preemp;		// 0=off, 1=on
