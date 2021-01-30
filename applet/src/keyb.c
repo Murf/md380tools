@@ -221,6 +221,7 @@ void handle_sidekey( int keycode, int keypressed )
      // (obviously NOT, for example the displayed zone changed long BEFORE the 'red LED flash')
 
     if ( keycode == 18 ) {             //top button
+     reset_backlight();
       if ( (keypressed & 2) == 2 && kb_top_side_key_press_time < kb_side_key_max_time) {  //short press
         evaluate_sidekey( top_side_button_pressed_function );
       }
