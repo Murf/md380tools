@@ -121,8 +121,8 @@ void demo_clear(void)
 void demo(void)
 {
     display_credits();
-    sleep(1000);
-    demo_show_animation();
+    sleep(2000);
+    //demo_show_animation(); 
     demo_clear();
 }
 
