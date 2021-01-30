@@ -911,18 +911,30 @@ int Menu_DrawIfVisible(int caller)
               pMenu->redraw = TRUE;
               break;
            default:  // Other keys .. editing or treat as a hotkey ?
-              // Use the "hash"-key to open the ALTERNATIVE MENU ? 
-              if(  ( pMenu->visible == APPMENU_OFF ) // ALTERNATIVE menu not visible yet.. ?
-                && ( global_addl_config.keyb_mode == 1) // hash-key used to open that menu ? 
-                && !is_netmon_visible() ) // AND screen not occupied by netmon ?
-               { Menu_Open(pMenu, NULL, NULL, APPMENU_EDIT_OFF);  // so open the ALTERNATIVE menu (default items)
-               }
-              if( pMenu->edit_mode != APPMENU_EDIT_OFF )
-               { Menu_ProcessEditKey(pMenu, c);
-               }
+
+              if (c == '#' && pMenu->visible == APPMENU_OFF && !is_netmon_visible()) { // red "Back"-key : 
+                                                  // red_led_timer  = 20;    // <- poor man's debugging 
+                {
+                  Menu_Open(pMenu, NULL, NULL, APPMENU_EDIT_OFF);  // so open the default menu (items)
+                  StartStopwatch(&pMenu->morse_stopwatch);
+                  // Reporting the first item in Morse code later (when morse_stopwatch expires): 
+                  pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+                }
+              }
+              else if (c == '#' && pMenu->visible == APPMENU_VISIBLE && pMenu->pItems == am_Main && !is_netmon_visible()) {
+                Menu_Close(pMenu);
+                Menu_Open(pMenu, NULL/*main items*/, "TkGrp"/*cpJumpToItem*/, APPMENU_EDIT_OVERWRT);
+                
+              }
+
+              if (pMenu->edit_mode != APPMENU_EDIT_OFF)
+              {
+                Menu_ProcessEditKey(pMenu, c);
+              }
               else // NOT editing -> numeric keys used as hotkeys for quick navigation
-               { Menu_ProcessHotkey(pMenu, c);
-               }
+              {
+                Menu_ProcessHotkey(pMenu, c);
+              }
               break;
          } // end switch < key >
         if( pMenu->visible )
